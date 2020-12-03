@@ -2,7 +2,11 @@
 title: "Project Proposal"
 author: "Annelise Koster"
 date: "12/3/2020"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
+  html_document:
+    df_print: paged
 ---
 
 <link href="/rmarkdown-libs/anchor-sections/anchor-sections.css" rel="stylesheet" />
@@ -24,6 +28,7 @@ library(tidyverse)</code></pre>
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(readxl)
 knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)</code></pre>
+<p>My first data set is hotel bookings</p>
 <pre><code>## &#39;data.frame&#39;:    119390 obs. of  32 variables:
 ##  $ hotel                         : Factor w/ 2 levels &quot;City Hotel&quot;,&quot;Resort Hotel&quot;: 2 2 2 2 2 2 2 2 2 2 ...
 ##  $ is_canceled                   : int  0 0 0 0 0 0 0 0 1 1 ...
@@ -57,9 +62,32 @@ knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)</code></pre>
 ##  $ total_of_special_requests     : int  0 0 0 0 1 1 0 1 1 0 ...
 ##  $ reservation_status            : Factor w/ 3 levels &quot;Canceled&quot;,&quot;Check-Out&quot;,..: 2 2 2 2 2 2 2 2 1 1 ...
 ##  $ reservation_status_date       : Factor w/ 926 levels &quot;1/1/2015&quot;,&quot;1/1/2016&quot;,..: 669 669 702 702 735 735 735 735 570 449 ...</code></pre>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
+<p>For this project I am examining hotel booking data contained in the Hotel booking demand dataset from Kaggle.com. This dataset contains booking information from two hotels including number of guests, length of stay and how the booking was made. The data consists of 119,390 observations of 32 variables. The variables include the type of hotel, the arrival date, the number of guests, the guest’s nationality, and how many special requests the customer had. Based off my observations and assumptions I believe this data to be from a specific geographic area that draws numerous international visitors specifically groups of two adults.</p>
+<ul>
+<li>Question 1: Determine if there is a difference in lead times between the two types of hotels.
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+</ul></li>
+<li>Question 2: Determine if there is a change in lead times over the three years of data.
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+</ul></li>
+<li>Question 3: Do customers from different countries have different booking behavior? (do some have greater lead times than others?)
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+<li>Could also create a spatial map denoting the average lead time for customers from various locations and color the data points by lead time to denote the differences.</li>
+</ul></li>
+<li>Question 4: Determine which country’s citizens require more special attention.
+<ul>
+<li>Develop a spatial map which shows the average number of special requests from customers from different countries.</li>
+</ul></li>
+<li>Question 5: Determine which month is the busiest for the hotels.
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+</ul></li>
+</ul>
+<p>I will probably only end up answering three or four of these questions.</p>
+<p>My second data set is 911 emergency calls from Montgomery County</p>
 <pre><code>## &#39;data.frame&#39;:    663522 obs. of  9 variables:
 ##  $ lat      : num  40.3 40.3 40.1 40.1 40.3 ...
 ##  $ lng      : num  -75.6 -75.3 -75.4 -75.3 -75.6 ...
@@ -70,5 +98,22 @@ knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)</code></pre>
 ##  $ twp      : Factor w/ 69 levels &quot;&quot;,&quot;ABINGTON&quot;,..: 36 20 37 37 30 23 21 49 32 42 ...
 ##  $ addr     : Factor w/ 41292 levels &quot;.&quot;,&quot;10TH AVE&quot;,..: 29611 3866 15602 948 6189 5155 19440 7168 21124 3479 ...
 ##  $ e        : int  1 1 1 1 1 1 1 1 1 1 ...</code></pre>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
-</div>
+<p>For this project I am examining the 911 calls data contained in the Emergency – 911 Calls dataset from Kraggle.com. This dataset contains information about calls made to 911 in Montgomery County Pennsylvania. The data consists of 663,522 observations of 9 variables. The variable lat is a number denoting the latitude of the cal. The variable lng is a number denoting the longitude of the call. The desc variable is a factor with 663,282 levels which represent the street name, town station number time and date of the call. The zip variable is a 5-digit integer representing the zip code of the location of the emergency. The variable title is a factor with 148 levels indicating the type of emergency. The timestamp variable is a factor with 543,989 levels indicating the time the call was placed. The twp variable is a factor with 69 levels indicating the town from which the call originated. The variable addr is a factor with 41,292 levels giving the street names of the location of the incident. The variable e is an integer which denotes the call was an emergency.</p>
+<ul>
+<li>Question 1: See if a specific type of emergency (EMS, fire, traffic) is more likely to occur at a specific time of day.
+<ul>
+<li>Not entirely sure how to explain how I want to do this but will most likely generate some data visualizations and summary statistics but I am not entirely sure at this moment.</li>
+</ul></li>
+<li>Question 2: Determine which area of Montgomery County had the most emergencies.
+<ul>
+<li>Create a spatial map which shows the number of emergencies across the county.</li>
+</ul></li>
+<li>Question 3: Determine which type of emergency is the most common.
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+</ul></li>
+<li>Question 4: Determine which day of the week has the most traffic accidents.
+<ul>
+<li>Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations.</li>
+</ul></li>
+</ul>
