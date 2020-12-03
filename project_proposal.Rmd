@@ -1,0 +1,37 @@
+---
+title: "Project Proposal"
+author: "Annelise Koster"
+date: "12/3/2020"
+output: pdf_document
+---
+
+My blog can be found at https://akoster-dasc-1104-blog.netlify.app/
+
+
+```{r}
+library(here)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
+```
+
+
+
+```{r}
+data_hotel <- read.csv(file = here::here("hotelbooking_data.csv"))
+
+str(data_hotel)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+data_911 <- read.csv(file = here::here("911_data.csv"))
+
+str(data_911)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

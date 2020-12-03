@@ -1,6 +1,10 @@
 ---
-date: "2016-05-05T21:48:51-07:00"
+date: "2020-12-03T11:11:51-07:00"
 title: About
 ---
 
-This is a "hello world" example website for the [**blogdown**](https://github.com/rstudio/blogdown) package. The theme was forked from [@jrutheiser/hugo-lithium-theme](https://github.com/jrutheiser/hugo-lithium-theme) and modified by [Yihui Xie](https://github.com/yihui/hugo-lithium).
+
+I'm Annelise Koster a junior data science major at the University of Arkansas. My time is filled with schoolwork, an internship at my church, and mountain biking. I also enjoy to read - A Girl of the Limberlost, The Kitchen Counter Cooking School, and Educated are some of my favorite books. I created this blog as an assignment for my one of my programming classes and intend to use it to showcase various projects I work on throughout my school and work career. 
+
+
+
