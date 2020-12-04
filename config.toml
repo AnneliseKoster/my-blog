@@ -4,7 +4,7 @@ title = "Annelise Koster's Blog for dasc1104"
 theme = "hugo-lithium"
 googleAnalytics = ""
 disqusShortname = ""
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$"]
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\\.md$", "\\.csv$"]
 
 [permalinks]
     post = "/:year/:month/:day/:slug/"
@@ -15,8 +15,12 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_cache$", "\\.knit\\.md$", "\\.utf8\
 [[menu.main]]
     name = "GitHub"
     url = "https://github.com/AnneliseKoster"
-
-
+[[menu.main]]
+    name = "LinkedIn"
+    url = "https://www.linkedin.com/in/annelise-koster/"
+[[menu.main]]
+    name = "Resume"
+    url = "./static/resume-master/resume-example.Rmd"
 [params]
     description = "A website built through Hugo and blogdown."
 
