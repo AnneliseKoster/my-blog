@@ -6,7 +6,17 @@
     <description>Recent content on Annelise Koster&#39;s Blog for dasc1104</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 07 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hotel Analysis</title>
+      <link>/2020/12/07/hotel-analysis/</link>
+      <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/12/07/hotel-analysis/</guid>
+      <description>Hotel Analysis  Introduction 1 paragraph describe the dataset, how the data was collected, give a big picture overview of the data and the questions you are trying to answer.Talk about the source of the data and identify what you want to test
+The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, this dataset is originally from the article Hotel Booking Demands Datasets, written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019.</description>
+    </item>
+    
     <item>
       <title>About</title>
       <link>/about/</link>
@@ -17,31 +27,21 @@
     </item>
     
     <item>
-      <title>A first post</title>
-      <link>/2020/12/03/a-first-post/</link>
-      <pubDate>Thu, 03 Dec 2020 00:00:00 +0000</pubDate>
+      <title>911_analysis</title>
+      <link>/1/01/01/911_analysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2020/12/03/a-first-post/</guid>
-      <description>My first blog post, hopefully everything uploads like it should :)</description>
+      <guid>/1/01/01/911_analysis/</guid>
+      <description>Second Data Set - 911 calls  Introduction For this project I am examining the 911 calls data contained in the Emergency – 911 Calls dataset from Kraggle.com, the data was originally provided by montcoalert.org. This dataset contains information about emergency calls made to 911 in Montgomery County Pennsylvania. I believe this dataset to be a subset of a larger dataset that contains all calls made to 911, I think this because there is a column that seems to serve as a flag within the dataset.</description>
     </item>
     
     <item>
-      <title>A Plain Markdown Post</title>
-      <link>/2016/12/30/a-plain-markdown-post/</link>
-      <pubDate>Fri, 30 Dec 2016 21:49:57 -0700</pubDate>
+      <title>hotel_analysis</title>
+      <link>/1/01/01/hotel_analysis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/2016/12/30/a-plain-markdown-post/</guid>
-      <description>This is a post written in plain Markdown (*.md) instead of R Markdown (*.Rmd). The major differences are:
- You cannot run any R code in a plain Markdown document, whereas in an R Markdown document, you can embed R code chunks (```{r}); A plain Markdown post is rendered through Blackfriday, and an R Markdown document is compiled by rmarkdown and Pandoc.  There are many differences in syntax between Blackfriday&amp;rsquo;s Markdown and Pandoc&amp;rsquo;s Markdown.</description>
-    </item>
-    
-    <item>
-      <title>Lorem Ipsum</title>
-      <link>/2015/01/01/lorem-ipsum/</link>
-      <pubDate>Thu, 01 Jan 2015 13:09:13 -0600</pubDate>
-      
-      <guid>/2015/01/01/lorem-ipsum/</guid>
-      <description>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</description>
+      <guid>/1/01/01/hotel_analysis/</guid>
+      <description>Hotel Analysis  Introduction The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, this dataset is originally from the article Hotel Booking Demands Datasets, written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019. Thomas Mock and Antoine Bichat are responsible for cleaning the original data. This dataset contains booking information for two hotels but since the hotels mentioned are real hotels any data pertaining to customer or hotel identification has been deleted.</description>
     </item>
     
   </channel>
