@@ -1,0 +1,126 @@
+    1  git config --global user.name 'Annelise Koster'
+    2  git config --global user.email annelisekoster1@gmail.com'
+    3   echo 560BD2BB && echo $HISTCONTROL && /usr/bin/env && echo A540F5F4
+    4  git config --global user.email 'annelisekoster1@gmail.com'
+    5  git config --global --list
+    6  ssh-keygen -t rsa -b 4096 -C "statistcal-methods-server"
+    7  eval "$(ssh-agent -s)"
+    8  ssh-add ~/.ssh/id_rsa
+    9  cat ~./ssh/id_rsa.pub
+   10  ls ~/.ssh
+   11  cat ~/.ssh/id_rsa.pub
+   12  ssh -T git@github.com
+   13  git clone https://github.com/AnneliseKoster/my-blog.git
+   14  cd ~/my-blog
+   15  git status
+   16  git add .
+   17  git commit -a -m 'first blog post'
+   18  git push
+   19  cd ~/my-blog
+   20  git status
+   21  git push
+   22  git status
+   23  git push
+   24  git remote -v
+   25  git remote set-url origin git@github.com:AnneliseKoster/my-blog.git
+   26  git push
+   27  git add .
+   28  git commit -a -m 'config commit'
+   29  git push
+   30  git status
+   31  git push
+   32  git add .
+   33  git commit -a -m "about commit"
+   34  git push
+   35  git status
+   36  git push
+   37  git remote -v
+   38  git status
+   39  git push
+   40  git rm --cached 911_data.csv
+   41  git status
+   42  git push
+   43  git add 911_data.csv
+   44  git add
+   45  git add .
+   46  git commit -a -m "config and about commit"
+   47  git push
+   48  git reset --soft HEAD^
+   49  git status
+   50  git reset --soft HEAD^
+   51  git status
+   52  git log
+   53  git status
+   54  git commit -a -m "proposal data, config and about commit"
+   55  git push
+   56  git status
+   57  git add .
+   58  git commit -a -m "test first blog post"
+   59  git push
+   60  git status
+   61  git add .
+   62  git commit -a -m "resume commit"
+   63  git push
+   64  git status
+   65  git add .
+   66  git commit -a -m "changes to config - edited resume and linkedin"
+   67  git push
+   68  git status
+   69  git add .
+   70  git commit -a -m "updated picture"
+   71  git push
+   72  git status
+   73  git add .
+   74  git commit -a -m 
+   75  git status
+   76  git add .
+   77  git commit -a -m "editing resume path"
+   78  git push
+   79  git add .
+   80  git commit -a -m "more changes to config file"
+   81  git push
+   82  git status
+   83  git add R
+   84  git add public
+   85  git add static/resume
+   86  git commit -m "committing R folder"
+   87  git push
+   88  cd public/
+   89  ls -al
+   90  ls -a
+   91  rm .gitkeep
+   92  git status
+   93  git add .gitkeep
+   94  git add resume
+   95  git add ../static/resume
+   96  git status
+   97  git stash
+   98  git status
+   99  git rm rf --cached resume
+  100  git rm -rf --cached resume
+  101  git status
+  102  git rm -rf --cached ../static/resume
+  103  git add resume
+  104  git add ../static/resume
+  105  git status
+  106  ls -a
+  107  cd resume/
+  108  ls -a
+  109  rm -r .git
+  110  ls -a
+  111  git status
+  112  cd ../../static/resume
+  113  ls -a
+  114  rm -r .git
+  115  ls -a
+  116  git status
+  117  cd ..
+  118  git rm -rf --cached static/resume
+  119  git rm -rf --cached public/resume
+  120  git status
+  121  add .
+  122  git add .
+  123  git status
+  124  git commit -m "committing resume"
+  125  git push
+  126  history > history_for_print.txt

@@ -1,0 +1,244 @@
+---
+title: "rough_draft"
+author: "Annelise Koster"
+date: "12/4/2020"
+output: pdf_document
+---
+
+```{r}
+library(here)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(patchwork)
+library(rgdal)
+knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
+```
+## First Data Set - Hotels
+
+
+```{r}
+data_hotel <- read.csv(file = here::here("hotelbooking_data.csv"))
+
+str(data_hotel)
+
+```
+
+```{r}
+month <- factor(data_hotel$arrival_date_month, levels = month.name)
+table(data_hotel$hotel, data_hotel$arrival_date_year, month)
+
+table(data_hotel$hotel,data_hotel$arrival_date_year)
+
+summary(data_hotel$lead_time)
+
+summary(data_hotel$is_canceled)
+
+
+```
+# Question
+Determine if there is a difference in cancellation rates between the two types of hotels.
+ - yes there is. People are more likely to cancel if they booked at the city hotel. The cancelation rates for the city hotel have stayed relatively consistent over the three years we have data for but the cancellation rates for the resort hotel have been increasing over the three years of data.
+
+```{r}
+
+data_hotel %>%
+  group_by(hotel, arrival_date_year) %>%
+  summarize(mean_cancelation_rate_per_year = mean(is_canceled))
+
+# data_hotel %>%
+#   group_by(hotel, arrival_date_year) %>%
+#   summarize(mean_cancelation_rate_per_year = mean(is_canceled)) %>%
+#   ggplot(aes(arrival_date_year, mean_cancelation_rate_per_year[3])) +
+#   geom_bar()
+
+
+```
+# Question 
+Determine if there is a difference in lead times between the two types of hotels.
+ - yes there is a difference in lead times between the resort and city hotel. The city hotel has a much longer lead time than the resort hotel. Both hotel's lead times have been increasing over the three years of data.  
+    
+```{r}
+
+data_hotel %>%
+  group_by(hotel, arrival_date_year) %>%
+  summarize(mean_lead_time = mean(lead_time), median_lead_time = median(lead_time))
+
+data_hotel %>%
+  group_by(hotel) %>%
+  ggplot(aes(hotel, lead_time)) +
+  geom_boxplot() +
+  xlab("Hotel Type") +
+  ylab("Lead Time") +
+  ggtitle("Lead Time per Hotel Type")
+
+
+
+```
+
+
+# Question
+Determine which month is the busiest for each type of hotel. 
+- the city hotel has approximately the same number of guests year round, their busiest months are April and July. 
+- the resort hotel is busiest June-September with its slowest months being January and November
+    
+```{r}
+data_hotel$month <- factor(data_hotel$arrival_date_month, levels = month.name)
+data_hotel$total_guests_per_day <- data_hotel$adults + data_hotel$children + data_hotel$babies
+
+data_hotel %>%
+  group_by(hotel, month) %>%
+  summarize(total_guests_per_month = sum(total_guests_per_day))
+
+
+```
+
+# Question
+determine the lead time per month of arrival - when is the hotel busier so you need to book earlier?
+- if you want a room at the city hotel between May and October you will need to book 4-5 months in advance compared to booking a room in January or February you will only need to book about 2 months in advance
+- if you want a room at the resort hotel between May and October you will also need to book 4-6 months in advance. If you want a room November - March you will only need to book 2 months in advance.
+
+```{r}
+data_hotel$month <- factor(data_hotel$arrival_date_month, levels = month.name)
+
+data_hotel %>%
+  group_by(hotel, month) %>%
+  summarize(mean_lead_time = mean(lead_time))
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Second Data Set - 911 calls
+
+- look for duplicates of address and see if there is a common type of emergency
+-   compare to twp
+- count the number of each type of emergency per town
+
+```{r}
+
+# data_911 %>%
+#   group_by(twp) %>%
+#   count() %>%
+#   arrange(desc(n))
+
+filter(data_911, type %in% c("EMS")) %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'red')+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of EMS Emergencies in Montgomery County")
+
+filter(data_911, type %in% c("Fir")) %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'green')+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of Fires in Montgomery County")
+
+filter(data_911, type %in% c("Tra")) %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'blue')+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of Traffic Emergencies in Montgomery County")
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+data_911 <- read.csv(file = here::here("911_data.csv"))
+
+str(data_911)
+```
+
+
+# Question 
+Determine which area of Montgomery County had the most emergencies.
+    - Create a spatial map which shows the number of emergencies across the county. 
+
+```{r}
+
+# counted_zip_data <- data_911 %>%
+#   group_by(zip) %>%
+#   count()
+# print(counted_zip_data)
+
+towns <- readOGR(dsn="map_shapes", layer="tl_2019_us_county")
+plot(towns)
+
+towns <- readOGR(dsn=path.expand("~/Home/maps/map_shapes/tl_2019_us_county.shp"), layer="tl_2019_us_county")
+
+
+
+filter(data_911) %>%
+  ggplot(aes(lng, lat, color = type)) +
+  geom_point()+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of Montgomery County")
+  
+
+
+```
+
+
+# Question
+Determine which type of emergency is the most common. 
+    - Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations. 
+
+```{r}
+
+data_911 %>%
+  group_by(title) %>%
+  count() %>%
+  arrange(desc(n))
+
+```
+
+    
+# Question   
+Determine which day of the week has the most traffic accidents.
+ - Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations. 
+
+```{r}
+
+data_911 %>%
+  group_by(dow) %>%
+  count() %>%
+  arrange(desc(n))
+
+data_911 %>%
+  group_by(dow) %>%
+  ggplot(aes(dow, fill = type)) +
+  geom_bar() +
+  xlab("Day of Week") +
+  ylab("Number of Emergencies") +
+  ggtitle("Number and Type of Emergency by Day of Week")
+
+
+```
+
