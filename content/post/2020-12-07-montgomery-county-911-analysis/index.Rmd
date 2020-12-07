@@ -1,9 +1,12 @@
 ---
-title: "911_analysis"
-author: "Annelise Koster"
-date: "12/7/2020"
-output: pdf_document
+title: Montgomery County 911 Analysis
+author: ~
+date: '2020-12-07'
+slug: montgomery-county-911-analysis
+categories: []
+tags: []
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,7 +21,7 @@ knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
 data_911 <- read.csv(file = here::here("911_data.csv"))
 ```
 
-## Second Data Set - 911 calls
+## Montgomery County 911 Calls
 
 # Introduction
 For this project I am examining the 911 calls data contained in the Emergency – 911 Calls dataset from Kraggle.com, the data was originally provided by montcoalert.org. This dataset contains information about emergency calls made to 911 in Montgomery County Pennsylvania. I believe this dataset to be a subset of a larger dataset that contains all calls made to 911, I think this because there is a column that seems to serve as a flag within the dataset. Upon analyzing the data I hope to be able to determine which area of Montgormery county has the most emergencies, what type of emergency is the most common and determine which day of the week has the most traffic accidents.
@@ -108,20 +111,9 @@ data_911 %>%
 
 ```
 
-
-
 # Weaknesses/Challenges in Data
 There were a few structural challenges with this dataset some of the columns originally contained too much information - combining date and time or multiple levels of emergency classification. To combat these challenges I had to manipulate and resort the data in excel before I uploaded it to analyze. I think it would have been interesting if they had included a column that was response time, so the time between when the call was received and when the response team arrived at the emergency. I think it could prove insightful to see if various kinds of emergencies produced different response times. 
 
 # Conclusion
-This dataset did not produce many suprising insights, most of the results produced by the analysis were the answers you would have expected after thinking about the question. The most common type of emergency was vehicle accidents and Fridays were the day when the most emergencies occured. I did find it interesting that the number of EMS emergencies and fires remained relatively constant across the entire week and it was traffic emergencies that was mostly responsible for the variation in total emergencies we see for each day. I found the spatial map extremely odd, not growing up in (or near) Montgomery County I am unaware of how the population density so upon seeing the spatial map with the majority of emergencies occuring in one area it led me to believe that this area is more heavily populated that the rest of the county (or the people are more accident prone - do not really think this could be the reason). 
-
-
-
-
-
-
-
-
-
+This dataset did not produce many suprising insights, most of the results produced by the analysis were the answers you would have expected after thinking about the question. The most common type of emergency was vehicle accidents and Fridays were the day when the most emergencies occured. I did find it interesting that the number of EMS emergencies and fires remained relatively constant across the entire week and it was traffic emergencies that was mostly responsible for the variation in total emergencies we see for each day. I found the spatial map extremely odd, not growing up in (or near) Montgomery County I am unaware of how the population density so upon seeing the spatial map with the majority of emergencies occuring in one area it led me to believe that this area is more heavily populated that the rest of the county (or the people are more accident prone but I do not really think this could be the reason). 
 

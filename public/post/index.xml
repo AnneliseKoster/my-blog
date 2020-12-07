@@ -13,8 +13,7 @@
       <pubDate>Mon, 07 Dec 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/12/07/hotel-analysis/</guid>
-      <description>Hotel Analysis  Introduction 1 paragraph describe the dataset, how the data was collected, give a big picture overview of the data and the questions you are trying to answer.Talk about the source of the data and identify what you want to test
-The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, this dataset is originally from the article Hotel Booking Demands Datasets, written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019.</description>
+      <description>Hotel Analysis  Introduction The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, this dataset is originally from the article Hotel Booking Demands Datasets, written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019. Thomas Mock and Antoine Bichat are responsible for cleaning the original data. This dataset contains booking information for two hotels but since the hotels mentioned are real hotels any data pertaining to customer or hotel identification has been deleted.</description>
     </item>
     
     <item>
@@ -24,15 +23,6 @@ The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, 
       
       <guid>/1/01/01/911_analysis/</guid>
       <description>Second Data Set - 911 calls  Introduction For this project I am examining the 911 calls data contained in the Emergency – 911 Calls dataset from Kraggle.com, the data was originally provided by montcoalert.org. This dataset contains information about emergency calls made to 911 in Montgomery County Pennsylvania. I believe this dataset to be a subset of a larger dataset that contains all calls made to 911, I think this because there is a column that seems to serve as a flag within the dataset.</description>
-    </item>
-    
-    <item>
-      <title>hotel_analysis</title>
-      <link>/1/01/01/hotel_analysis/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/1/01/01/hotel_analysis/</guid>
-      <description>Hotel Analysis  Introduction The first dataset I chose was the Hotel Booking Demand dataset from Kaggle.com, this dataset is originally from the article Hotel Booking Demands Datasets, written by Nuno Antonio, Ana Almeida, and Luis Nunes for Data in Brief, Volume 22, February 2019. Thomas Mock and Antoine Bichat are responsible for cleaning the original data. This dataset contains booking information for two hotels but since the hotels mentioned are real hotels any data pertaining to customer or hotel identification has been deleted.</description>
     </item>
     
   </channel>
