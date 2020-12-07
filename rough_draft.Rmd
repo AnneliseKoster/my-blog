@@ -46,11 +46,11 @@ data_hotel %>%
   group_by(hotel, arrival_date_year) %>%
   summarize(mean_cancelation_rate_per_year = mean(is_canceled))
 
-# data_hotel %>%
-#   group_by(hotel, arrival_date_year) %>%
-#   summarize(mean_cancelation_rate_per_year = mean(is_canceled)) %>%
-#   ggplot(aes(arrival_date_year, mean_cancelation_rate_per_year[3])) +
-#   geom_bar()
+data_hotel %>%
+  group_by(hotel, arrival_date_year) %>%
+  summarize(mean_cancelation_rate_per_year = mean(is_canceled)) %>%
+  ggplot(aes(arrival_date_year, mean_cancelation_rate_per_year[3])) +
+  geom_bar()
 
 
 ```
@@ -124,56 +124,23 @@ data_hotel %>%
 
 ## Second Data Set - 911 calls
 
-- look for duplicates of address and see if there is a common type of emergency
--   compare to twp
-- count the number of each type of emergency per town
-
-```{r}
-
-# data_911 %>%
-#   group_by(twp) %>%
-#   count() %>%
-#   arrange(desc(n))
-
-filter(data_911, type %in% c("EMS")) %>%
-  ggplot(aes(lng, lat)) +
-  geom_point(color = 'red')+
-  xlab("Longitude") +
-  ylab("Latitude") +
-  ggtitle("Map of EMS Emergencies in Montgomery County")
-
-filter(data_911, type %in% c("Fir")) %>%
-  ggplot(aes(lng, lat)) +
-  geom_point(color = 'green')+
-  xlab("Longitude") +
-  ylab("Latitude") +
-  ggtitle("Map of Fires in Montgomery County")
-
-filter(data_911, type %in% c("Tra")) %>%
-  ggplot(aes(lng, lat)) +
-  geom_point(color = 'blue')+
-  xlab("Longitude") +
-  ylab("Latitude") +
-  ggtitle("Map of Traffic Emergencies in Montgomery County")
-
-```
-
-
-
-
-
-
-
-
-
-
-
 
 ```{r}
 data_911 <- read.csv(file = here::here("911_data.csv"))
 
 str(data_911)
 ```
+
+```{r}
+
+table(data_911$type)
+table(data_911$dow)
+
+```
+
+
+
+
 
 
 # Question 
@@ -187,21 +154,44 @@ Determine which area of Montgomery County had the most emergencies.
 #   count()
 # print(counted_zip_data)
 
-towns <- readOGR(dsn="map_shapes", layer="tl_2019_us_county")
-plot(towns)
 
-towns <- readOGR(dsn=path.expand("~/Home/maps/map_shapes/tl_2019_us_county.shp"), layer="tl_2019_us_county")
-
+# map <- readOGR(dsn="maps", layer="County_Boundary")
+# plot(map)
 
 
-filter(data_911) %>%
-  ggplot(aes(lng, lat, color = type)) +
-  geom_point()+
+p1 <- filter(data_911) %>%
+ ggplot(aes(lng, lat, color = type)) +
+ geom_point()+
+ xlab("Longitude") +
+ ylab("Latitude") +
+ ggtitle("Map of Montgomery County")
+
+p2 <- filter(data_911) %>%
+  filter(type == "EMS") %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'pink')+
   xlab("Longitude") +
   ylab("Latitude") +
-  ggtitle("Map of Montgomery County")
-  
+  ggtitle("Map of EMS Emergencies")
 
+p3 <- filter(data_911) %>%
+  filter(type == "Fir") %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'green')+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of Fires")
+
+p4 <- filter(data_911) %>%
+  filter(type == "Tra") %>%
+  ggplot(aes(lng, lat)) +
+  geom_point(color = 'blue')+
+  xlab("Longitude") +
+  ylab("Latitude") +
+  ggtitle("Map of Traffic Emergencies")
+
+(p1)/
+  (p2 | p3 | p4)
 
 ```
 
@@ -221,7 +211,7 @@ data_911 %>%
 
     
 # Question   
-Determine which day of the week has the most traffic accidents.
+Determine which day of the week has the most emergencies.
  - Will most likely do this by generating different data visualizations and calculating summary statistics like means, medians, and standard deviations. 
 
 ```{r}
