@@ -16,7 +16,7 @@ library(tidyverse)
 library(readxl)
 library(patchwork)
 library(rgdal)
-knitr::opts_chunk$set(echo = FALSE, tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
 
 data_911 <- read.csv(file = here::here("911_data.csv"))
 ```
