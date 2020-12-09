@@ -67,6 +67,14 @@ data_hotel %>%
   group_by(hotel, arrival_date_year) %>%
   summarize(mean_cancellation_rate_per_year = mean(is_canceled))
 
+
+data_hotel %>%
+  group_by(hotel, arrival_date_year) %>%
+  summarize(mean_cancellation_rate_per_year = mean(is_canceled)) %>%
+  ggplot(aes(arrival_date_year, mean_cancellation_rate_per_year, fill = hotel)) +
+  geom_bar(stat = "identity")
+
+
 ```
 
 # Question 2
@@ -99,7 +107,24 @@ data_hotel %>%
   group_by(hotel, month) %>%
   summarize(total_guests_per_month = sum(total_guests_per_day))
 
+q1 <- data_hotel %>%
+  filter(hotel == "City Hotel") %>%
+  group_by(hotel, month) %>%
+  summarize(total_guests_per_month = sum(total_guests_per_day)) %>%
+  ggplot(aes(month, total_guests_per_month, fill = hotel)) +
+  geom_histogram(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = -90))
 
+q2 <- data_hotel %>%
+  filter(hotel == "Resort Hotel") %>%
+  group_by(hotel, month) %>%
+  summarize(total_guests_per_month = sum(total_guests_per_day)) %>%
+  ggplot(aes(month, total_guests_per_month, fill = hotel)) +
+  geom_histogram(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = -90))
+
+
+(q1 | q2)
 ```
 
 # Weaknesses/Challenges in Data
