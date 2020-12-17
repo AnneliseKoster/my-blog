@@ -29,11 +29,28 @@ data_911 &lt;- mutate(data_911, type = substr(title, 1,3))
 data_911 &lt;- mutate(data_911, date = as_date(ymd_hms(timeStamp)), time = hms::as_hms(ymd_hms(timeStamp)))
 data_911$dow &lt;- weekdays(data_911$date)
 
-# str(data_911)
-
 data_911 &lt;- data_911 %&gt;%
   filter(lat &gt; 39.8 &amp; lat &lt; 40.6) %&gt;%
-  filter(lng &gt; -76 &amp; lng &lt; -74.5) </code></pre>
+  filter(lng &gt; -76 &amp; lng &lt; -74.5) 
+
+data_911_no_nas &lt;- na.omit(data_911)
+
+str(data_911)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    662953 obs. of  13 variables:
+##  $ lat      : num  40.3 40.3 40.1 40.1 40.3 ...
+##  $ lng      : num  -75.6 -75.3 -75.4 -75.3 -75.6 ...
+##  $ desc     : Factor w/ 663282 levels &quot;.  ; AMBLER; 2018-04-05 @ 14:35:42;&quot;,..: 467158 67539 251193 14378 102372 87032 312838 117579 342883 62923 ...
+##  $ zip      : int  19525 19446 19401 19401 NA 19446 19044 19426 19438 19462 ...
+##  $ title    : Factor w/ 148 levels &quot;EMS: ABDOMINAL PAINS&quot;,..: 10 23 104 18 25 42 50 60 69 146 ...
+##  $ timeStamp: Factor w/ 640754 levels &quot;2015-12-10 14:39:21&quot;,..: 10 13 1 6 8 2 5 3 7 16 ...
+##  $ twp      : Factor w/ 69 levels &quot;&quot;,&quot;ABINGTON&quot;,..: 36 20 37 37 30 23 21 49 32 42 ...
+##  $ addr     : Factor w/ 41292 levels &quot;.&quot;,&quot;10TH AVE&quot;,..: 29611 3866 15602 948 6189 5155 19440 7168 21124 3479 ...
+##  $ e        : int  1 1 1 1 1 1 1 1 1 1 ...
+##  $ type     : chr  &quot;EMS&quot; &quot;EMS&quot; &quot;Fir&quot; &quot;EMS&quot; ...
+##  $ date     : Date, format: &quot;2015-12-10&quot; &quot;2015-12-10&quot; ...
+##  $ time     : &#39;hms&#39; num  17:10:52 17:29:21 14:39:21 16:47:36 ...
+##   ..- attr(*, &quot;units&quot;)= chr &quot;secs&quot;
+##  $ dow      : chr  &quot;Thursday&quot; &quot;Thursday&quot; &quot;Thursday&quot; &quot;Thursday&quot; ...</code></pre>
 <div id="montgomery-county-911-calls" class="section level2">
 <h2>Montgomery County 911 Calls</h2>
 </div>
@@ -43,7 +60,7 @@ data_911 &lt;- data_911 %&gt;%
 </div>
 <div id="exploratory-data-analysis" class="section level1">
 <h1>Exploratory Data Analysis</h1>
-<p>Performing exploratory analysis was harder on this data set as most of the variables had hundreds of levels making it such that creating a table would not provide many valuable insights. To make the dataset more usable I edited it slightly in excel, creating a column that only had the main type of emergency (EMS, Fire or Traffic) and did not also contain the further classification. I also divided the time stamp into two separate columns so that it would be easier to analyze and then I used the new date column to produce a new column which was the day of week. The insights that I did gather are as follows: there are three different types of emergencies - EMS (emergency medical services), Fir (fire) and Tra (traffic). Of the three types of emergencies EMS emergencies are the most common followed by traffic and fire. The 911 operator receives the most emergency calls on Fridays and the least on Sundays.</p>
+<p>Performing exploratory analysis was harder on this data set as most of the variables had hundreds of levels making it such that creating a table would not provide many valuable insights. To make the dataset more usable I edited it slightly using the mutate function, creating a column that only had the main type of emergency (EMS, Fire or Traffic) and did not also contain the further classification. I also divided the time stamp into two separate columns so that it would be easier to analyze and then I used the new date column to produce a new column which was the day of week. The insights that I did gather are as follows: there are three different types of emergencies - EMS (emergency medical services), Fir (fire) and Tra (traffic). Of the three types of emergencies EMS emergencies are the most common followed by traffic and fire. The 911 operator receives the most emergency calls on Fridays and the least on Sundays.</p>
 <pre class="r"><code>table(data_911$type)</code></pre>
 <pre><code>## 
 ##    EMS    Fir    Tra 
@@ -52,6 +69,13 @@ data_911 &lt;- data_911 %&gt;%
 <pre><code>## 
 ##    Friday    Monday  Saturday    Sunday  Thursday   Tuesday Wednesday 
 ##    102853     96662     89363     78773     98598     97613     99091</code></pre>
+</div>
+<div id="data-analysis-results" class="section level1">
+<h1>Data Analysis &amp; Results</h1>
+</div>
+<div id="question-1" class="section level1">
+<h1>Question 1</h1>
+<p>The first thing I wanted to determine was which area of Montgomery County had the most emergencies. I determined this by making a spatial map using the longitude and latitude and then mapped the emergencies using ggplot and faceting according to type of emergency so I could determine if certain emergencies were more likely to occur in specific parts of the county. When looking at the spatial map it is apparent that emergencies occur all over the county but in the lower left corner there is a higher concentration of emergencies, this likely indicates that a city is located there. When I looked up a map of Montogmery county I was able to determine that most of the emergencies occur in the area near the towns of King of Prussia and Norristown. It was interesting to compare the response distances for the three different types of emergencies. Respondents would react to EMS and traffic emergencies outside the county limits but not fire emergencies.</p>
 <pre class="r"><code>counties &lt;- map_data(&quot;county&quot;)
 pa_county &lt;- subset(counties, region == &quot;pennsylvania&quot;)
 mont_county &lt;- subset(pa_county, subregion == &quot;montgomery&quot;)
@@ -60,46 +84,44 @@ mont_county &lt;- subset(pa_county, subregion == &quot;montgomery&quot;)
 ggplot(data_911) + geom_hex(aes(lng, lat), bins = 60) + geom_polygon(data = mont_county, 
     aes(x = long, y = lat, group = group), color = &quot;red&quot;, fill = NA) + facet_wrap(~type) + 
     xlab(&quot;Latitude&quot;) + ylab(&quot;Longitude&quot;) + ggtitle(&quot;Map of Montgomery County&quot;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" />
-# Data Analysis &amp; Results</p>
-</div>
-<div id="question-1" class="section level1">
-<h1>Question 1</h1>
-<p>The first thing I wanted to determine was which area of Montgomery County had the most emergencies. I determined this by making a spatial map using the longitude and latitude and then mapped the emergencies by creating a colored dot that corresponded to the type of emergency each time it occurred. Because of how clumped together all the data points ended up being I decided to look at each type of emergency individually so that I could more distinctly see what was happening. I was able to do this by using the same format I did for the first map but filtering down to only using the data that was coded as a specific type of emergency. I then patched all these graphs together so that they could be viewed simultaneously. When looking at the graphs it is easy to see that is one ‘hot spot’ where the majority of the emergencies occur. When I looked up a map of Montgomery county I was able to determine that most of the emergencies occur in the Lower Merrion township.</p>
-<pre class="r"><code>p1 &lt;- filter(data_911) %&gt;% ggplot(aes(lng, lat, color = type)) + geom_point() + xlab(&quot;Latitude&quot;) + 
-    ylab(&quot;Longitude&quot;) + ggtitle(&quot;Map of Montgomery County&quot;)
-
-p2 &lt;- filter(data_911) %&gt;% filter(type == &quot;EMS&quot;) %&gt;% ggplot(aes(lng, lat)) + geom_hex(color = &quot;pink&quot;) + 
-    xlab(&quot;Latitude&quot;) + ylab(&quot;Longitude&quot;) + ggtitle(&quot;Map of EMS Emergencies&quot;)
-
-p3 &lt;- filter(data_911) %&gt;% filter(type == &quot;Fir&quot;) %&gt;% ggplot(aes(lng, lat)) + geom_hex(color = &quot;green&quot;) + 
-    xlab(&quot;Latitude&quot;) + ylab(&quot;Longitude&quot;) + ggtitle(&quot;Map of Fires&quot;)
-
-p4 &lt;- filter(data_911) %&gt;% filter(type == &quot;Tra&quot;) %&gt;% ggplot(aes(lng, lat)) + geom_hex(color = &quot;blue&quot;) + 
-    xlab(&quot;Latitude&quot;) + ylab(&quot;Longitude&quot;) + ggtitle(&quot;Map of Traffic Emergencies&quot;)
-
-(p1)/(p2 | p3 | p4)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 </div>
 <div id="question-2" class="section level1">
 <h1>Question 2</h1>
-<p>The second question I wanted to answer was what type of emergency is the most common. I determined this by sorting the data by the title column and then counting the number of occurrences with the same name and then arranging them in descending order. By doing this I was able to ascertain (unsurprisingly) that vehicle accidents are the most common emergency followed by disabled vehicles and fire alarms.</p>
-<pre class="r"><code>data_911 %&gt;% group_by(title) %&gt;% count() %&gt;% arrange(desc(n))</code></pre>
-<pre><code>## # A tibble: 148 x 2
-## # Groups:   title [148]
+<p>The second question I wanted to answer was what type of emergency is the most common. I determined this by sorting the data by the title column and then counting the number of occurrences with the same name and then arranging them in descending order. By doing this I was able to ascertain (unsurprisingly) that vehicle accidents are the most common emergency followed by disabled vehicles and fire alarms. I then also looked deeper into the location of the vehicle accidents by filtering and counting the number of vehicle accidents that occur in each zip code. When looking at the generated results there was not one specific zip code that had astronomically more vehicle accidents than another but there was a fair amount of variation in the total number of vehicle accidents per zip code across the various zip codes. I assume that the areas of Montgomery County that are more densely populated will expereince a greater number of vehicle accidents.</p>
+<pre class="r"><code>data_911_no_nas %&gt;% group_by(title) %&gt;% count() %&gt;% arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 144 x 2
+## # Groups:   title [144]
 ##    title                            n
 ##    &lt;fct&gt;                        &lt;int&gt;
-##  1 Traffic: VEHICLE ACCIDENT - 148177
-##  2 Traffic: DISABLED VEHICLE -  47814
-##  3 Fire: FIRE ALARM             38334
-##  4 EMS: FALL VICTIM             34675
-##  5 EMS: RESPIRATORY EMERGENCY   34244
-##  6 EMS: CARDIAC EMERGENCY       32326
-##  7 EMS: VEHICLE ACCIDENT        25446
-##  8 Traffic: ROAD OBSTRUCTION -  23153
-##  9 EMS: SUBJECT IN PAIN         19643
-## 10 EMS: HEAD INJURY             18299
-## # … with 138 more rows</code></pre>
+##  1 Traffic: VEHICLE ACCIDENT - 125096
+##  2 Traffic: DISABLED VEHICLE -  36927
+##  3 Fire: FIRE ALARM             36249
+##  4 EMS: FALL VICTIM             32757
+##  5 EMS: RESPIRATORY EMERGENCY   32497
+##  6 EMS: CARDIAC EMERGENCY       30485
+##  7 EMS: SUBJECT IN PAIN         18598
+##  8 Traffic: ROAD OBSTRUCTION -  18504
+##  9 EMS: HEAD INJURY             17419
+## 10 EMS: VEHICLE ACCIDENT        15766
+## # … with 134 more rows</code></pre>
+<pre class="r"><code>data_911_no_nas %&gt;% filter(title == &quot;Traffic: VEHICLE ACCIDENT -&quot;) %&gt;% group_by(zip) %&gt;% 
+    count() %&gt;% arrange(desc(n))</code></pre>
+<pre><code>## # A tibble: 122 x 2
+## # Groups:   zip [122]
+##      zip     n
+##    &lt;int&gt; &lt;int&gt;
+##  1 19401  7556
+##  2 19446  6764
+##  3 19464  6160
+##  4 19403  6076
+##  5 19406  5523
+##  6 19002  4991
+##  7 19454  4921
+##  8 19090  4422
+##  9 19468  3986
+## 10 19046  3736
+## # … with 112 more rows</code></pre>
 </div>
 <div id="question-3" class="section level1">
 <h1>Question 3</h1>
@@ -107,13 +129,13 @@ p4 &lt;- filter(data_911) %&gt;% filter(type == &quot;Tra&quot;) %&gt;% ggplot(a
 <pre class="r"><code>data_911 %&gt;% group_by(dow) %&gt;% ggplot(aes(dow, e, fill = factor(type, levels = c(&quot;Tra&quot;, 
     &quot;EMS&quot;, &quot;Fir&quot;)))) + geom_bar(stat = &quot;identity&quot;) + xlab(&quot;Day of Week&quot;) + ylab(&quot;Number of Emergencies&quot;) + 
     ggtitle(&quot;Number and Type of Emergency by Day of Week&quot;)</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="weaknesseschallenges-in-data" class="section level1">
 <h1>Weaknesses/Challenges in Data</h1>
-<p>There were a few structural challenges with this dataset some of the columns originally contained too much information - combining date and time or multiple levels of emergency classification. To combat these challenges I had to manipulate and resort the data in excel before I uploaded it to analyze. I think it would have been interesting if they had included a column that was response time, so the time between when the call was received and when the response team arrived at the emergency. I think it could prove insightful to see if various kinds of emergencies produced different response times.</p>
+<p>There were a few structural challenges with this dataset as some of the columns originally contained too much information - combining date and time or multiple levels of emergency classification. To combat these challenges I had to manipulate and resort the data using the mutate function before I analyzed it. There was also an issue with some of the longitude and latitude coordinates not corresponding with the location of the data - some of the coordinates for locations outside of the United States, so I had to delete those rows of data before developing the spatial map as it greatly skewed my results. I think it would have been interesting if the dataset had included a column regarding response time, so the time between when the call was received and when the response team arrived at the emergency. I think it could prove insightful to see if various kinds of emergencies produced different response times.</p>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>This dataset did not produce many surprising insights, most of the results produced by the analysis were the answers you would have expected after thinking about the question. The most common type of emergency was vehicle accidents and Fridays were the day when the most emergencies occured. I did find it interesting that the number of EMS emergencies and fires remained relatively constant across the entire week and it was traffic emergencies that was mostly responsible for the variation in total emergencies we see for each day. I found the spatial map extremely odd, not growing up in (or near) Montgomery County I am unaware of how the population density so upon seeing the spatial map with the majority of emergencies occuring in one area it led me to believe that this area is more heavily populated that the rest of the county (or the people are more accident prone but I do not really think this could be the reason).</p>
+<p>This dataset did not produce many surprising insights, most of the results produced by the analysis were the answers you would have expected after thinking about the question. The most common type of emergency was vehicle accidents and Fridays were the day when the most emergencies occurred. I did find it interesting that the number of EMS emergencies and fires remained relatively constant across the entire week and it was traffic emergencies that was mostly responsible for the variation in total emergencies we see for each day. I found the spatial map extremely interesting, it was cool to see that you could draw assumptions regarding population density given the number of emergencies that occurred in a specific area.</p>
 </div>
