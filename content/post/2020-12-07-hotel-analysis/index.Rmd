@@ -18,7 +18,7 @@ library(patchwork)
 library(rgdal)
 
 
-data_hotel_dirty <- read.csv("hotelbooking_data.csv")
+data_hotel_dirty <- read.csv(here("content", "post", "2020-12-07-hotel-analysis", "hotelbooking_data.csv"))
 
 data_hotel <- na.omit(data_hotel_dirty)
 

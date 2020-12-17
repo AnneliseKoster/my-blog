@@ -11,6 +11,21 @@ tags: []
 <script src="index_files/anchor-sections/anchor-sections.js"></script>
 
 
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
+library(here)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(patchwork)
+library(rgdal)
+
+
+data_hotel_dirty &lt;- read.csv(here(&quot;content&quot;, &quot;post&quot;, &quot;2020-12-07-hotel-analysis&quot;, &quot;hotelbooking_data.csv&quot;))
+
+data_hotel &lt;- na.omit(data_hotel_dirty)
+
+
+#str(data_hotel)</code></pre>
 <div id="hotel-analysis" class="section level2">
 <h2>Hotel Analysis</h2>
 </div>
@@ -21,98 +36,24 @@ tags: []
 <div id="exploratory-data-analysis" class="section level1">
 <h1>Exploratory Data Analysis</h1>
 <p>While performing exploratory data analysis I gained a few insights about the data. Firstly, the dataset only contains data from July 2015 - August 2017 meaning that when looked at on a per year basis 2015 and 2017 will contain less months worth of data, this should be kept in mind when comparing the years to each other.</p>
-<pre><code>## , , month = January
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 1364 2372
-##   Resort Hotel    0  884 1309
-## 
-## , , month = February
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 2371 2594
-##   Resort Hotel    0 1520 1583
-## 
-## , , month = March
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 3046 3412
-##   Resort Hotel    0 1778 1558
-## 
-## , , month = April
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 3561 3919
-##   Resort Hotel    0 1867 1742
-## 
-## , , month = May
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 3676 4556
-##   Resort Hotel    0 1802 1757
-## 
-## , , month = June
-## 
-##               
-##                2015 2016 2017
-##   City Hotel      0 3923 3971
-##   Resort Hotel    0 1369 1676
-## 
-## , , month = July
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   1398 3131 3559
-##   Resort Hotel 1378 1441 1754
-## 
-## , , month = August
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   2480 3378 3125
-##   Resort Hotel 1409 1685 1800
-## 
-## , , month = September
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   3529 3871    0
-##   Resort Hotel 1585 1523    0
-## 
-## , , month = October
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   3386 4219    0
-##   Resort Hotel 1571 1984    0
-## 
-## , , month = November
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   1235 3122    0
-##   Resort Hotel 1105 1332    0
-## 
-## , , month = December
-## 
-##               
-##                2015 2016 2017
-##   City Hotel   1654 2478    0
-##   Resort Hotel 1266 1382    0</code></pre>
+<pre class="r"><code>month &lt;- factor(data_hotel$arrival_date_month, levels = month.name)
+# awful_table &lt;- table(data_hotel$hotel, data_hotel$arrival_date_year, month)
+# print(awful_table)
+
+plot.default(data_hotel$arrival_date_year, month)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <p>Continuing my exploratory analysis I wanted to compare the number of transactions per hotel type for year. When just looking at the below table it looks like the hotels are experiencing a decrease in number of transactions but as mentioned above we need to remember that 2016 is the only year in this dataset that we have a full 12 months of data for.</p>
 <p>What the below table can tell us is that the city hotel experiences more transactions than the resort hotel. Without more data we are unable to determine if the larger number of transactions is due to the city hotel being more popular than the resort hotel or if the city hotel is simply bigger than the resort hotel thus having more rooms and more booking transactions or it is possible that guests tend to stay longer at the resort hotel making the city hotel have a faster room turnover making it look busier when in actuality it is simply the number of transactions that is larger.</p>
+<pre class="r"><code>table(data_hotel$hotel, data_hotel$arrival_date_year)</code></pre>
 <pre><code>##               
 ##                 2015  2016  2017
-##   City Hotel   13682 38140 27508
+##   City Hotel   13678 38140 27508
 ##   Resort Hotel  8314 18567 13179</code></pre>
 <p>The last two variables I looked at were lead time and cancellations. I wanted to get a broad idea of what the average lead time (time between booking a reservation and showing up at the hotel) and cancellation rates were. Based on this high-level viewing I saw that the average lead time is 104 days and the average cancellation rate is 37%.</p>
+<pre class="r"><code>summary(data_hotel$lead_time)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##       0      18      69     104     160     737</code></pre>
+<pre class="r"><code>summary(data_hotel$is_canceled)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.0000  0.0000  0.0000  0.3704  1.0000  1.0000</code></pre>
 </div>
@@ -122,6 +63,7 @@ tags: []
 <div id="question-1" class="section level1">
 <h1>Question 1</h1>
 <p>The first question I sought to answer was to determine if there is a difference in cancellation rates between the two types of hotels. I attempted to answer this question by generating a table that grouped the data by hotel type and year and then I took the average of all the data points in that specific section and generated an average of the is_canceled column to determine what the cancellation rate is for that hotel in a given year. Based of the below table we can see that there is a marked numerical difference between the cancellation rate for the city hotel and the one for the resort hotel. The city hotel’s cancellation rate has hovered between 40%-43% over the 3 years of data and the resort’s cancellation rate has been between 25% and 30% over the same time frame. The cancellation rate for the city hotel has stayed relatively stable across all three years, I did not notice either an increasing or decreasing trend. However for the resort hotel the cancellation rate has been increasing over the three years of data, this is not a long enough time frame to determine if this is actually a trend but it is an interesting observation.</p>
+<pre class="r"><code>data_hotel %&gt;% group_by(hotel, arrival_date_year) %&gt;% summarize(mean_cancellation_rate_per_year = mean(is_canceled))</code></pre>
 <pre><code>## # A tibble: 6 x 3
 ## # Groups:   hotel [2]
 ##   hotel        arrival_date_year mean_cancellation_rate_per_year
@@ -132,11 +74,16 @@ tags: []
 ## 4 Resort Hotel              2015                           0.257
 ## 5 Resort Hotel              2016                           0.266
 ## 6 Resort Hotel              2017                           0.308</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>data_hotel %&gt;% group_by(hotel, arrival_date_year) %&gt;% summarize(mean_cancellation_rate_per_year = mean(is_canceled)) %&gt;% 
+    ggplot(aes(arrival_date_year, mean_cancellation_rate_per_year, fill = hotel)) + 
+    geom_bar(position = &quot;dodge&quot;, stat = &quot;identity&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="question-2" class="section level1">
 <h1>Question 2</h1>
-<p>The second question I explored was is there a difference in lead times between the two types of hotels. I sought to answer this question by again generating a table that sorted the data by hotel type and year but then I used lead time as my variable of interest to determine what the average lead time was for each hotel by year. I also generated a box plot so that I could visually see the difference in the data distribution for the two hotel types in regard to lead time. Upon performing these analyses I was able to determine that there is a difference in lead time between the two hotels. The city hotel has a longer lead time than the resort with the mean for the city hotel being approximately 109 days for all three years of data and the mean for the resort being 91 days. Another thing we can see is that the lead times for both hotels has been increasing over the three years of data included in the dataset.</p>
+<p>The second question I explored was is there a difference in lead times between the two types of hotels. I sought to answer this question by again generating a table that sorted the data by hotel type and year but then I used lead time as my variable of interest to determine what the average lead time was for each hotel by year. I also generated a box plot so that I could visually see the difference in the data distribution for the two hotel types in regard to lead time and faceted this by year to display the difference in hotel types and annual trend. Upon performing these analyses I was able to determine that there is a difference in lead time between the two hotels. The city hotel has a longer lead time than the resort with the mean for the city hotel being approximately 109 days for all three years of data and the mean for the resort being 91 days. Another thing we can see is that the lead times for both hotels has been increasing over the three years of data included in the dataset.</p>
+<pre class="r"><code>data_hotel %&gt;% group_by(hotel, arrival_date_year) %&gt;% summarize(mean_lead_time = mean(lead_time), 
+    median_lead_time = median(lead_time))</code></pre>
 <pre><code>## # A tibble: 6 x 4
 ## # Groups:   hotel [2]
 ##   hotel        arrival_date_year mean_lead_time median_lead_time
@@ -147,11 +94,19 @@ tags: []
 ## 4 Resort Hotel              2015           83.3               54
 ## 5 Resort Hotel              2016           92.1               54
 ## 6 Resort Hotel              2017           99.4               66</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>data_hotel %&gt;% group_by(hotel) %&gt;% ggplot(aes(hotel, lead_time)) + geom_boxplot() + 
+    facet_wrap(~arrival_date_year) + geom_point(position = &quot;jitter&quot;, alpha = 0.008) + 
+    xlab(&quot;Hotel Type&quot;) + ylab(&quot;Lead Time&quot;) + ggtitle(&quot;Lead Time per Hotel Type&quot;)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="question-3" class="section level1">
 <h1>Question 3</h1>
-<p>The third question I attempted to answer was determining which month was the busiest for each type of hotel. To start I had to make a new variable (month) which took the arrival month and sorted them in chronological order instead of alphabetical order. I also had to create a second new variable (total_guests_per_day) to sum the adults, children and babies columns so I could more easily compare the number of guests. I then used hotel type and my new variable ‘month’ to group the data and then I summed my other new variable ‘total_guests_per_day’ to determine the total number of guests each hotel had in a specific month. Based off the resulting table I was observed that the city hotel has approximately the same number of guests for most of the year but experiences a drastic drop in November through February. The resort hotel also experiences slower months November through January but the difference is not as drastic. The resort hotel seems to operate on a decreased number of guests year round (with November-January being the slowest) and then experiences a surge of guests in July and August.</p>
+<p>The third question I attempted to answer was determining which month was the busiest for each type of hotel. To start I had to make a new variable (month) which took the arrival month and sorted them in chronological order instead of alphabetical order. I also had to create a second new variable (total_guests_per_day) to sum the adults, children and babies columns so I could more easily compare the number of guests. I then used hotel type and my new variable ‘month’ to group the data and then I summed my other new variable ‘total_guests_per_day’ to determine the total number of guests each hotel had in a specific month. Based off the resulting table I was observed that the city hotel has high visitation rates during the time of year when people often travel for work, which also explains the lower visitation rates from November through February as most business trips are not scheduled around the holidays. The resort hotel experiences a spike in number of guests during the summer season and has a relatively steady number of guests for the rest of the year (with November-January experiencing the lowest number of guests - probably due to the holiday season).</p>
+<pre class="r"><code>data_hotel$month &lt;- factor(data_hotel$arrival_date_month, levels = month.name)
+data_hotel$total_guests_per_day &lt;- data_hotel$adults + data_hotel$children + data_hotel$babies
+
+
+data_hotel %&gt;% group_by(hotel, month) %&gt;% summarize(total_guests_per_month = sum(total_guests_per_day))</code></pre>
 <pre><code>## # A tibble: 24 x 3
 ## # Groups:   hotel [2]
 ##    hotel      month     total_guests_per_month
@@ -163,15 +118,22 @@ tags: []
 ##  5 City Hotel May                        15464
 ##  6 City Hotel June                       15116
 ##  7 City Hotel July                       17203
-##  8 City Hotel August                        NA
+##  8 City Hotel August                     19392
 ##  9 City Hotel September                  13961
 ## 10 City Hotel October                    14133
 ## # … with 14 more rows</code></pre>
-<pre><code>## Warning: Ignoring unknown parameters: binwidth, bins, pad
-
-## Warning: Ignoring unknown parameters: binwidth, bins, pad</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (position_stack).</code></pre>
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>q1 &lt;- data_hotel %&gt;% filter(hotel == &quot;City Hotel&quot;) %&gt;% group_by(hotel, month) %&gt;% 
+    summarize(total_guests_per_month = sum(total_guests_per_day)) %&gt;% ggplot(aes(month, 
+    total_guests_per_month, fill = hotel)) + geom_histogram(stat = &quot;identity&quot;) + 
+    theme(axis.text.x = element_text(angle = -90))</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: binwidth, bins, pad</code></pre>
+<pre class="r"><code>q2 &lt;- data_hotel %&gt;% filter(hotel == &quot;Resort Hotel&quot;) %&gt;% group_by(hotel, month) %&gt;% 
+    summarize(total_guests_per_month = sum(total_guests_per_day)) %&gt;% ggplot(aes(month, 
+    total_guests_per_month, fill = hotel)) + geom_histogram(stat = &quot;identity&quot;) + 
+    theme(axis.text.x = element_text(angle = -90))</code></pre>
+<pre><code>## Warning: Ignoring unknown parameters: binwidth, bins, pad</code></pre>
+<pre class="r"><code>(q1 | q2)</code></pre>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 </div>
 <div id="weaknesseschallenges-in-data" class="section level1">
 <h1>Weaknesses/Challenges in Data</h1>
@@ -179,5 +141,5 @@ tags: []
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
-<p>My analysis focused on comparing the two hotels and then looking at each hotel individually. I believe these hotels to be located in the United States of America or somewhere near the American continents because of the ebb and flow of the number of guests per month. The resort hotel maintained a relatively steady stream of customers throughout the year and then experienced a spike in July and August which coincides with the American summer break. I also believe the dips both hotels saw in number of customers during the months of November, December and January can be explained by the importance of the festive season, most people go and visit family during these months and are more likely to crowd into a relative’s house then to book a room in a hotel. I also believe both of these hotel’s primary customers are vacation goers, I am basing this off the fact of the lengthy lead time. If to stay in a certain hotel you need to book at least three months in advance it makes me think the hotels are positioned to attract people on vacation over people travelling for business purposes. The difference in cancellation rates (40%-43% for the city hotel and 25%-30% for the resort hotel) make me think that there are more alternative places to stay in the city where the city hotel is located compared to the location of the resort hotel.</p>
+<p>My analysis focused on comparing the two hotels and then looking at each hotel individually. I believe these hotels to be located in the United States of America or somewhere near the American continents because of the ebb and flow of the number of guests per month. The resort hotel maintained a relatively steady stream of customers throughout the year and then experienced a spike in July and August which coincides with the American summer break. I also believe the dips both hotels saw in number of customers during the months of November, December and January can be explained by the importance of the festive season. Most people go and visit family during these months and are more likely to crowd into a relative’s house then to book a room in a hotel. The difference in cancellation rates (40%-43% for the city hotel and 25%-30% for the resort hotel) make me think that there are more alternative places to stay in the city where the city hotel is located compared to the location of the resort hotel.</p>
 </div>
