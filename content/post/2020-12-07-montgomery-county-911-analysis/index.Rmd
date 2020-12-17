@@ -8,17 +8,31 @@ tags: []
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
 library(here)
 library(ggplot2)
 library(tidyverse)
 library(readxl)
 library(patchwork)
 library(rgdal)
-knitr::opts_chunk$set(echo = TRUE, tidy = TRUE)
+library(lubridate)
+library(maps)
+library(ggmap)
+library(mapdata)
 
-data_911 <- read.csv(file = here::here("911_data.csv"))
+
+data_911 <- read.csv(here("content", "post", "2020-12-07-montgomery-county-911-analysis", "911.csv"))
+data_911 <- mutate(data_911, type = substr(title, 1,3))
+data_911 <- mutate(data_911, date = as_date(ymd_hms(timeStamp)), time = hms::as_hms(ymd_hms(timeStamp)))
+data_911$dow <- weekdays(data_911$date)
+
+# str(data_911)
+
+data_911 <- data_911 %>%
+  filter(lat > 39.8 & lat < 40.6) %>%
+  filter(lng > -76 & lng < -74.5) 
+
 ```
 
 ## Montgomery County 911 Calls
@@ -28,16 +42,31 @@ For this project I am examining the 911 calls data contained in the Emergency â€
 
 
 # Exploratory Data Analysis
-Performing exploratory analysis was harder on this data set as most of the variables had hundreds of levels making it such that creating a table would not provide many valuable insights. To make the dataset more usable I edited it slightly in excel, creating a column that only had the main type of emergency (EMS, Fire or Traffic) and did not also contain the further classification. I also divided the time stamp into two seperate columns so that it would be easier to analyze and then I used the new date column and used that to produce a new column which was the day of week. The insights that I did gather are as follows: there are three different types of emergencies - EMS (emergency medical services), Fir (fire) and Tra (traffic). Of the three types of emergencies EMS emergencies are the most common followed by traffic and fire. The 911 operator receives the most emergency calls on Fridays and the least on Sundays. 
+Performing exploratory analysis was harder on this data set as most of the variables had hundreds of levels making it such that creating a table would not provide many valuable insights. To make the dataset more usable I edited it slightly in excel, creating a column that only had the main type of emergency (EMS, Fire or Traffic) and did not also contain the further classification. I also divided the time stamp into two separate columns so that it would be easier to analyze and then I used the new date column to produce a new column which was the day of week. The insights that I did gather are as follows: there are three different types of emergencies - EMS (emergency medical services), Fir (fire) and Tra (traffic). Of the three types of emergencies EMS emergencies are the most common followed by traffic and fire. The 911 operator receives the most emergency calls on Fridays and the least on Sundays. 
 
 
 ```{r}
-
 table(data_911$type)
 table(data_911$dow)
 
 ```
+```{r}
 
+counties <- map_data("county")
+pa_county <- subset(counties, region == "pennsylvania")
+mont_county <- subset(pa_county, subregion == "montgomery")
+
+
+ggplot(data_911) + 
+  geom_hex(aes(lng, lat), bins = 60) +
+  geom_polygon(data = mont_county, aes(x = long, y = lat, group = group), color = "red", fill = NA) +
+  facet_wrap(~type) + 
+  xlab("Latitude") +
+  ylab("Longitude") +
+  ggtitle("Map of Montgomery County")
+
+
+```
 # Data Analysis & Results
 
 # Question 1
@@ -46,7 +75,7 @@ The first thing I wanted to determine was which area of Montgomery County had th
 ```{r}
 
 p1 <- filter(data_911) %>%
- ggplot(aes(lat, lng, color = type)) +
+ ggplot(aes(lng, lat, color = type)) +
  geom_point()+
  xlab("Latitude") +
  ylab("Longitude") +
@@ -54,37 +83,37 @@ p1 <- filter(data_911) %>%
 
 p2 <- filter(data_911) %>%
   filter(type == "EMS") %>%
-  ggplot(aes(lat, lng)) +
-  geom_point(color = 'pink')+
+  ggplot(aes(lng, lat)) +
+  geom_hex(color = 'pink')+
   xlab("Latitude") +
   ylab("Longitude") +
   ggtitle("Map of EMS Emergencies")
 
 p3 <- filter(data_911) %>%
   filter(type == "Fir") %>%
-  ggplot(aes(lat, lng)) +
-  geom_point(color = 'green')+
+  ggplot(aes(lng, lat)) +
+  geom_hex(color = 'green')+
   xlab("Latitude") +
   ylab("Longitude") +
   ggtitle("Map of Fires")
 
 p4 <- filter(data_911) %>%
   filter(type == "Tra") %>%
-  ggplot(aes(lat, lng)) +
-  geom_point(color = 'blue')+
+  ggplot(aes(lng, lat)) +
+  geom_hex(color = 'blue')+
   xlab("Latitude") +
   ylab("Longitude") +
   ggtitle("Map of Traffic Emergencies")
 
 (p1)/
-  (p2 | p3 | p4)
+  (p2 |p3 | p4)
 
 
 ```
 
 
 # Question 2
-The second question I wanted to answer was what type of emergency is the most common. I determined this by sorting the data by the title column and then counting the number of occurrences with the same name and then arranging them in descending order. By doing this I was able to ascertain (unsuprisingly) that vehicle accidents are the most common emergency followed by disabled vehicles and fire alarms. 
+The second question I wanted to answer was what type of emergency is the most common. I determined this by sorting the data by the title column and then counting the number of occurrences with the same name and then arranging them in descending order. By doing this I was able to ascertain (unsurprisingly) that vehicle accidents are the most common emergency followed by disabled vehicles and fire alarms. 
 
 ```{r}
 
@@ -93,6 +122,7 @@ data_911 %>%
   count() %>%
   arrange(desc(n))
 
+
 ```
 
 # Question 3
@@ -100,13 +130,15 @@ The final question I wanted to answer was to visually determine which day of the
 
 ```{r}
 
+
 data_911 %>%
   group_by(dow) %>%
-  ggplot(aes(dow, fill = type)) +
-  geom_bar() +
+  ggplot(aes(dow, e, fill = factor(type, levels=c("Tra", "EMS", "Fir")))) +
+  geom_bar(stat = "identity") +
   xlab("Day of Week") +
   ylab("Number of Emergencies") +
   ggtitle("Number and Type of Emergency by Day of Week")
+
 
 
 ```
